@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Todo List</title>
+</head>
+<body>
+    <h1>Your Todo List</h1>
+
+    <p>Hello, {{ request.user.username }} | <a href="{% url 'logout' %}">Logout</a></p>
+    <p><a href="{% url 'add_todo' %}">+ Add New Todo</a></p>
+
+    {% if todos %}
+        <ul>
+            {% for todo in todos %}
+                <li>
+                    <strong>{{ todo.title }}</strong> - {{ todo.status }} 
+                    {% if todo.due_date %} (Due: {{ todo.due_date }}) {% endif %}<br>
+                    {{ todo.description }}
+
+                    <form method="post" action="{% url 'update_todo' todo.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <select name="status" onchange="this.form.submit()">
+                            {% for key, label in todo.STATUS_CHOICES %}
+                                <option value="{{ key }}" {% if key == todo.status %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                    <form method="post" action="{% url 'delete_todo' todo.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No todo items yet.</p>
+    {% endif %}
+</body>
+</html>

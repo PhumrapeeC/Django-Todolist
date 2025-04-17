@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from .models import Todo
 from .forms import TodoForm
 
@@ -34,11 +35,16 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-# Display Todo List
+# Display Todo List with Pagination
 @login_required
 def todo_list(request):
-    todos = Todo.objects.filter(user=request.user)
-    return render(request, 'todo_list.html', {'todos': todos})
+    todos = Todo.objects.filter(user=request.user).order_by('-created_at')
+    paginator = Paginator(todos, 4)  # แสดง 4 รายการต่อหน้า
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'todo_list.html', {'page_obj': page_obj})
 
 # Add New Todo
 @login_required

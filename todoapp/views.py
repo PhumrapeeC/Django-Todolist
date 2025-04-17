@@ -71,3 +71,18 @@ def delete_todo(request, todo_id):
     todo = get_object_or_404(Todo, id=todo_id, user=request.user)
     todo.delete()
     return redirect('todo_list')
+
+# Edit Todo
+@login_required
+def edit_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, user=request.user)
+
+    if request.method == 'POST':
+        form = TodoForm(request.POST, instance=todo)
+        if form.is_valid():
+            form.save()
+            return redirect('todo_list')
+    else:
+        form = TodoForm(instance=todo)
+
+    return render(request, 'edit_todo.html', {'form': form, 'todo': todo})

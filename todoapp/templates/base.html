@@ -8,11 +8,18 @@
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'todo_list' %}">TodoApp</a>
+            <a class="navbar-brand" href="{% if request.user.is_authenticated %}{% url 'todo_list' %}{% else %}{% url 'login' %}{% endif %}">
+                TodoApp
+            </a>
             <div class="ms-auto">
                 {% if request.user.is_authenticated %}
                     <span class="text-white me-2">Hi, {{ request.user.username }}</span>
                     <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+                {% else %}
+                    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
+                        <a href="{% url 'signup' %}" class="btn btn-outline-light btn-sm">Sign Up</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

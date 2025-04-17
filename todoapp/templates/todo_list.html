@@ -5,21 +5,18 @@
 {% block content %}
 <a href="{% url 'add_todo' %}" class="btn btn-primary mb-4">+ Add New Todo</a>
 
-{% if todos %}
+{% if page_obj %}
     <div class="row g-3">
-        {% for todo in todos %}
+        {% for todo in page_obj %}
             <div class="col-md-6">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">{{ todo.title }}</h5>
                         <p class="card-text">{{ todo.description }}</p>
-
                         {% if todo.due_date %}
                             <p class="text-muted mb-1">Due: {{ todo.due_date }}</p>
                         {% endif %}
-
                         <div class="d-flex justify-content-between align-items-center">
-                            <!-- Update status -->
                             <form method="post" action="{% url 'update_todo' todo.id %}">
                                 {% csrf_token %}
                                 <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
@@ -28,7 +25,6 @@
                                     {% endfor %}
                                 </select>
                             </form>
-
                             <div class="d-flex gap-2">
                                 <a href="{% url 'edit_todo' todo.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
                                 <form method="post" action="{% url 'delete_todo' todo.id %}">
@@ -42,6 +38,37 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Pagination controls -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
 {% else %}
     <div class="alert alert-info">No todo items yet.</div>
 {% endif %}

@@ -1,12 +1,14 @@
 from django import forms
-from .models import Todo
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
+class CustomUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        max_length=30,
+        help_text="Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.",
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
-class TodoForm(forms.ModelForm):
     class Meta:
-        model = Todo
-        fields = ['title', 'description', 'status', 'due_date']
-        widgets = {
-            'due_date': forms.DateInput(attrs={'type': 'date'}),
-            'status': forms.Select(choices=Todo.STATUS_CHOICES),
-        }
+        model = User
+        fields = ("username", "password1", "password2")

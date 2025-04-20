@@ -4,18 +4,18 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Todo
-from .forms import TodoForm
+from .forms import CustomUserCreationForm
 
 # Signup View
 def signup_view(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('todo_list')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
 # Login View

@@ -48,6 +48,7 @@ google-api-core==2.24.1
 google-auth==2.38.0
 googleapis-common-protos==1.66.0
 grpcio==1.70.0
+gunicorn==23.0.0
 h11==0.14.0
 httpcore==1.0.5
 httptools==0.6.4

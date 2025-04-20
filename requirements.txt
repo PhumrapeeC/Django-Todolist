@@ -91,7 +91,7 @@ outlines_core==0.1.26
 packaging==24.2
 pandas==2.2.3
 partial-json-parser==0.2.1.1.post5
-pillow==11.1.0
+pillow==10.3.0
 pipenv==2024.4.1
 platformdirs==4.3.6
 pluggy==1.4.0
